@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earthing Mat Filter - Exemple d'utilisation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .filters {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            height: fit-content;
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .results {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stats {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .stats p {
+            margin: 5px 0;
+            font-size: 0.95em;
+        }
+
+        .mat-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            background: #fff;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .mat-card:hover {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .mat-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .mat-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.85em;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            color: #333;
+            font-size: 1.1em;
+            margin-top: 5px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .no-results p {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .mat-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌍 Earthing Mat Filter</h1>
+            <p class="subtitle">Trouvez le tapis de mise à la terre idéal</p>
+        </header>
+
+        <div class="content">
+            <div class="filters">
+                <h2 style="margin-bottom: 20px; color: #333;">Filtres</h2>
+
+                <div class="filter-group">
+                    <label>Prix max (€)</label>
+                    <input type="number" id="maxPrice" placeholder="500" value="500">
+                </div>
+
+                <div class="filter-group">
+                    <label>Conductivité min (S/m)</label>
+                    <input type="number" id="minConductivity" placeholder="1e6" value="1000000">
+                </div>
+
+                <div class="filter-group">
+                    <label>Type d'usage</label>
+                    <select id="usage">
+                        <option value="">Tous</option>
+                        <option value="personnel">Personnel</option>
+                        <option value="professionnel">Professionnel</option>
+                        <option value="médical">Médical</option>
+                        <option value="industriel">Industriel</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Matériau</label>
+                    <select id="material">
+                        <option value="">Tous</option>
+                        <option value="carbone">Carbone</option>
+                        <option value="argent">Argent</option>
+                        <option value="nickel">Nickel</option>
+                        <option value="titane">Titane</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Tri par</label>
+                    <select id="sortBy">
+                        <option value="price-asc">Prix (croissant)</option>
+                        <option value="price-desc">Prix (décroissant)</option>
+                        <option value="conductivity-desc">Conductivité (meilleure)</option>
+                        <option value="rating-desc">Note (meilleure)</option>
+                    </select>
+                </div>
+
+                <button onclick="applyFilters()">Appliquer les filtres</button>
+            </div>
+
+            <div class="results" id="results">
+                <p style="text-align: center; color: #999;">Cliquez sur "Appliquer les filtres" pour commencer</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Données d'exemple de tapis de mise à la terre
+        const matsData = [
+            {
+                id: 1,
+                name: "EarthPro Deluxe",
+                brand: "EarthPro",
+                price: 299.99,
+                conductivity: 6.3e7,
+                material: "argent",
+                thickness: 5,
+                rating: 4.8,
+                usages: ["personnel", "professionnel"],
+                dimensions: { width: 60, length: 40 },
+                certifications: ["CE", "ISO"],
+                inStock: true,
+                quantity: 15,
+                hypoallergenic: true
+            },
+            {
+                id: 2,
+                name: "GroundMat Pro",
+                brand: "GroundMat",
+                price: 189.99,
+                conductivity: 3e4,
+                material: "carbone",
+                thickness: 4,
+                rating: 4.5,
+                usages: ["personnel"],
+                dimensions: { width: 50, length: 30 },
+                certifications: ["CE"],
+                inStock: true,
+                quantity: 22,
+                hypoallergenic: false
+            },
+            {
+                id: 3,
+                name: "MedicalGround Elite",
+                brand: "MedicalGround",
+                price: 449.99,
+                conductivity: 1.43e7,
+                material: "nickel",
+                thickness: 6,
+                rating: 4.9,
+                usages: ["médical", "professionnel"],
+                dimensions: { width: 80, length: 60 },
+                certifications: ["CE", "ISO", "FDA"],
+                inStock: true,
+                quantity: 8,
+                hypoallergenic: true
+            },
+            {
+                id: 4,
+                name: "IndustrialGround Max",
+                brand: "IndustrialGround",
+                price: 599.99,
+                conductivity: 5.96e7,
+                material: "cuivre",
+                thickness: 8,
+                rating: 4.7,
+                usages: ["industriel", "professionnel"],
+                dimensions: { width: 100, length: 80 },
+                certifications: ["CE", "ISO"],
+                inStock: true,
+                quantity: 5,
+                hypoallergenic: false
+            },
+            {
+                id: 5,
+                name: "TitaniumGround",
+                brand: "TitaniumTech",
+                price: 349.99,
+                conductivity: 2.38e6,
+                material: "titane",
+                thickness: 5,
+                rating: 4.6,
+                usages: ["personnel", "médical"],
+                dimensions: { width: 70, length: 50 },
+                certifications: ["CE"],
+                inStock: true,
+                quantity: 12,
+                hypoallergenic: true
+            },
+            {
+                id: 6,
+                name: "EarthBalance Standard",
+                brand: "EarthPro",
+                price: 149.99,
+                conductivity: 2e4,
+                material: "carbone",
+                thickness: 3,
+                rating: 4.2,
+                usages: ["personnel"],
+                dimensions: { width: 40, length: 30 },
+                certifications: ["CE"],
+                inStock: true,
+                quantity: 30,
+                hypoallergenic: false
+            },
+            {
+                id: 7,
+                name: "ProGround Professional",
+                brand: "GroundMat",
+                price: 399.99,
+                conductivity: 4.5e7,
+                material: "argent",
+                thickness: 7,
+                rating: 4.8,
+                usages: ["professionnel", "médical"],
+                dimensions: { width: 90, length: 70 },
+                certifications: ["CE", "ISO", "FDA"],
+                inStock: false,
+                quantity: 0,
+                hypoallergenic: true
+            },
+            {
+                id: 8,
+                name: "CompactGround Travel",
+                brand: "TravelEarth",
+                price: 99.99,
+                conductivity: 1.5e4,
+                material: "carbone",
+                thickness: 2,
+                rating: 4.0,
+                usages: ["personnel"],
+                dimensions: { width: 30, length: 20 },
+                certifications: ["CE"],
+                inStock: true,
+                quantity: 50,
+                hypoallergenic: false
+            }
+        ];
+
+        // Classe simplifiée pour le navigateur
+        class EarthingMatFilter {
+            constructor(mats) {
+                this.mats = mats;
+                this.filters = [];
+                this.sortConfig = null;
+            }
+
+            byPriceRange(min, max) {
+                this.filters.push(mat => mat.price >= min && mat.price <= max);
+                return this;
+            }
+
+            byConductivity(min) {
+                this.filters.push(mat => mat.conductivity >= min);
+                return this;
+            }
+
+            byUsage(usage) {
+                this.filters.push(mat => !usage || mat.usages.includes(usage));
+                return this;
+            }
+
+            byMaterial(material) {
+                this.filters.push(mat => !material || mat.material === material);
+                return this;
+            }
+
+            sortBy(field, order) {
+                this.sortConfig = { field, order };
+                return this;
+            }
+
+            execute() {
+                let results = [...this.mats];
+                results = results.filter(mat => this.filters.every(f => f(mat)));
+
+                if (this.sortConfig) {
+                    const { field, order } = this.sortConfig;
+                    const isAsc = order === 'asc';
+                    results.sort((a, b) => {
+                        let aVal = a[field] || 0;
+                        let bVal = b[field] || 0;
+                        return isAsc ? aVal - bVal : bVal - aVal;
+                    });
+                }
+
+                return results;
+            }
+
+            getStatistics() {
+                const results = this.execute();
+                if (results.length === 0) {
+                    return { count: 0, avgPrice: 0, avgRating: 0 };
+                }
+                const avgPrice = results.reduce((s, m) => s + m.price, 0) / results.length;
+                const avgRating = results.reduce((s, m) => s + m.rating, 0) / results.length;
+                return {
+                    count: results.length,
+                    avgPrice: avgPrice.toFixed(2),
+                    avgRating: avgRating.toFixed(2)
+                };
+            }
+        }
+
+        function formatPrice(price) {
+            return new Intl.NumberFormat('fr-FR', {
+                style: 'currency',
+                currency: 'EUR'
+            }).format(price);
+        }
+
+        function formatDimensions(dims) {
+            return `${dims.width} cm × ${dims.length} cm`;
+        }
+
+        function applyFilters() {
+            const maxPrice = parseFloat(document.getElementById('maxPrice').value) || 10000;
+            const minConductivity = parseFloat(document.getElementById('minConductivity').value) || 0;
+            const usage = document.getElementById('usage').value;
+            const material = document.getElementById('material').value;
+            const sortBy = document.getElementById('sortBy').value;
+
+            let filter = new EarthingMatFilter(matsData)
+                .byPriceRange(0, maxPrice)
+                .byConductivity(minConductivity);
+
+            if (usage) filter.byUsage(usage);
+            if (material) filter.byMaterial(material);
+
+            const [field, order] = sortBy.split('-');
+            filter.sortBy(field, order);
+
+            const results = filter.execute();
+            const stats = filter.getStatistics();
+
+            let html = `
+                <div class="stats">
+                    <p><strong>Résultats:</strong> ${stats.count} tapis trouvé(s)</p>
+                    <p><strong>Prix moyen:</strong> ${formatPrice(stats.avgPrice)}</p>
+                    <p><strong>Note moyenne:</strong> ${stats.avgRating}/5</p>
+                </div>
+            `;
+
+            if (results.length === 0) {
+                html += '<div class="no-results"><p>Aucun tapis ne correspond à vos critères.</p></div>';
+            } else {
+                results.forEach(mat => {
+                    html += `
+                        <div class="mat-card">
+                            <h3>${mat.name}</h3>
+                            <div class="mat-info">
+                                <div class="info-item">
+                                    <div class="info-label">Marque</div>
+                                    <div class="info-value">${mat.brand}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Prix</div>
+                                    <div class="info-value">${formatPrice(mat.price)}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Matériau</div>
+                                    <div class="info-value">${mat.material}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Note</div>
+                                    <div class="info-value">⭐ ${mat.rating}/5</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Dimensions</div>
+                                    <div class="info-value">${formatDimensions(mat.dimensions)}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Stock</div>
+                                    <div class="info-value">${mat.inStock ? '✓ En stock' : '✗ Rupture'}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById('results').innerHTML = html;
+        }
+
+        // Affichage initial
+        applyFilters();
+    </script>
+</body>
+</html>
