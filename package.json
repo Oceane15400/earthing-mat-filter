@@ -1,0 +1,36 @@
+{
+  "name": "earthing-mat-filter",
+  "version": "1.0.0",
+  "description": "Librairie JavaScript légère pour filtrer et comparer les tapis de mise à la terre selon le prix, la conductivité, l'usage et les dimensions.",
+  "main": "src/EarthingMatFilter.js",
+  "scripts": {
+    "test": "node --test test/**/*.test.js",
+    "lint": "eslint src/",
+    "build": "node build.js",
+    "start": "npx http-server . -p 8080"
+  },
+  "keywords": [
+    "earthing",
+    "grounding",
+    "mat",
+    "filter",
+    "comparison",
+    "conductivity"
+  ],
+  "author": "EarthingMat Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/earthingmat/filter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/earthingmat/filter/issues"
+  },
+  "homepage": "https://github.com/earthingmat/filter#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0"
+  }
+}
